@@ -1,0 +1,28 @@
+
+
+<%= form_for @product do |p| %>
+<% if @product.errors.present? %>
+    <p>
+    <%= @product.errors.full_messages.join(', ') %>
+    </p>
+    <% end %>
+
+<div>
+    <%= p.label :title%>
+    <%= p.text_field :title %>
+</div>
+<div>
+    <%= p.label :description%>
+    <%= p.text_area :description %>
+</div>
+<div>
+    <%= p.label :price%>
+    <%= p.text_field :price %>
+</div>
+<div>
+    <%# <%= p.select_tag(:category) %> 
+    <%= p.select :category_id ,@categories.map {|category| [category.name, category.id] } %>
+    </div>
+
+<%= p.submit %>
+<% end %>

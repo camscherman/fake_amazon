@@ -1,0 +1,15 @@
+<%= form_tag contact_us_path do %>
+    <div>
+    <%= label_tag :name %>
+    <%= text_field_tag :name %>
+    </div>
+    <div>
+    <%= label_tag :email %>
+    <%= email_field_tag :email %>
+    </div>
+    <div>
+    <%= label_tag :comment %>
+    <%= text_area_tag :comment %>
+    </div>
+    <%= submit_tag %>
+    <% end %>

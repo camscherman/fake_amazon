@@ -1,0 +1,10 @@
+<h1>These are our products</h1>
+
+<% @products.each do |p| %>
+<div>
+    <%= link_to(p.title, product_path(p)) %>
+    <%= number_to_currency(p.price)%>
+</div>
+
+<% end %>
+

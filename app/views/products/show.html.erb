@@ -1,0 +1,39 @@
+<div>
+<h1> <%= @product.title %> </h1>
+<h2> <%= number_to_currency(@product.price) %></h2>
+<p> <%= @product.description %></p>
+<p>Created By: <%= @product.user&.full_name %>
+
+</div>
+<% if (user_signed_in? && can?(:manage, @product)) %>
+    <%= link_to( 'Edit Product', edit_product_path(@product)) %>
+    <%= link_to('Delete Product', product_path(@product), method: :delete) %>
+<% end %>
+
+<%= form_for [@product,@review]  do |f| %>
+<div>
+<%= f.label :body%>
+<%= f.text_area :body %>
+</div>
+<div>
+
+<%= f.label :rating %>
+<%= f.select :rating, (1..5).map { |num| [num,num]} %>
+</div>
+<%= f.submit %>
+<% end %>
+
+<%  @product.reviews.each do |review| %>
+<hr/>
+<div>
+
+    Rating: <%= review.rating %>
+    Body: <%= review.body %>
+    Created By: <%= review.user.full_name %>
+    <% if user_signed_in? &&  can?(:manage, review) %>
+    <%= link_to 'Delete', review_path(review), method: :delete, data: {confirm: "Are you sure?"} %>
+   <% end %>
+    </div>
+    <% end %>
+
+    <hr/>

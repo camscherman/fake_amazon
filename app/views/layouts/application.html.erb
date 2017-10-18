@@ -1,0 +1,39 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>Amazon</title>
+    <%= csrf_meta_tags %>
+
+    <%= stylesheet_link_tag    'application', media: 'all' %>
+    <%= javascript_include_tag 'application' %>
+  </head>
+
+  <body>
+  <%= link_to('Home', home_path) %>
+  |
+  <%= link_to('About', about_path) %>
+  |
+  <%= link_to('Contact Us', contact_us_path) %>
+  |
+  <%= link_to('Show products', products_path) %>
+  |
+  <%= link_to('Add a product', new_product_path) %>
+  |
+  <% if(current_user.present?) %>
+    <span> Hello <%= current_user.first_name %> <%= current_user.last_name %><span>
+    <%= link_to 'Sign Out', session_path, method: :delete %>
+  <% else %>
+      <%= link_to('Sign Up', new_user_path) %>
+      |
+      <%= link_to('Sign In', new_session_path) %>
+      <% end %>
+  <hr>
+  <% if(flash[:notice].present?) %>
+   <div class="flash-message">
+    <%= flash[:notice] || flash[:alert] %>
+    </div>
+    <% end %>
+
+    <%= yield %>
+  </body>
+</html>
