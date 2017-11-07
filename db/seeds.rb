@@ -5,9 +5,12 @@
 #
 #   movies = Movie.create([{ name: 'Star Wars' }, { name: 'Lord of the Rings' }])
 #   Character.create(name: 'Luke', movie: movies.first)
+Favourite.destroy_all
+
 Product.destroy_all
 Category.destroy_all
 User.destroy_all
+Tag.destroy_all
 
 PASSWORD = "supersecret"
 super_user = User.create(
@@ -42,6 +45,11 @@ end
     end
 end
 
+20.times do
+    Tag.create(name: Faker::HitchhikersGuideToTheGalaxy.planet)
+end
+
+tags = Tag.all
 products = Product.all
 
 products.each do |p|
@@ -51,12 +59,17 @@ products.each do |p|
                         product: p,
                         user: users.sample )
     end
+
+    p.tags = tags.shuffle.slice(0..rand(8))
 end
 reviews = Review.all
+taggings = Tagging.all
 puts "#{Product.all.count} products created"
 
 
 puts Cowsay.say("Created #{products.count} products", :ghostbusters)
 puts Cowsay.say("Created #{reviews.count} reviews", :moose)
 puts Cowsay.say("Created #{users.count} users", :tux)
+puts Cowsay.say("#{tags.count} tags created", :moose)
+puts Cowsay.say("#{taggings.count} taggings", :sheep)
 puts "Login with #{super_user.email} and password of '#{PASSWORD}'"

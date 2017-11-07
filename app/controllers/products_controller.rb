@@ -1,18 +1,18 @@
 class ProductsController < ApplicationController
-  
-  
-  before_action :find_product , only:[:show,  :update, :destroy, :edit]
 
-  before_action :get_categories, only: [:new, :create, :edit, :update]
-  before_action :authenticate_user, except: [:index, :show]
-  before_action :authorize_user!, except: [:index, :show, :new, :create]
+
+   before_action :find_product , only:[ :update, :destroy, :edit, :show]
+
+   before_action :get_categories, only: [:new, :create, :edit, :update]
+   before_action :authenticate_user, except: [:index, :show]
+   before_action :authorize_user!, except: [:index, :show, :new, :create]
 
   def index
     @products = Product.all.order(created_at: :desc)
   end
-  
+
   def new
-    @product  = Product.new  
+    @product  = Product.new
   end
 
   def edit
@@ -20,14 +20,15 @@ class ProductsController < ApplicationController
 
 
   def create
-    
+
     @product = Product.new(get_params)
     @product.user = current_user
+ 
     if(@product.save)
        redirect_to product_path(@product)
     else
       render new_product_path
-    end  
+    end
   end
 
   def update
@@ -38,7 +39,7 @@ class ProductsController < ApplicationController
 
   def destroy
     @product.destroy
-    redirect_to products_path
+     redirect_to products_path
   end
 
   def show
@@ -50,7 +51,7 @@ class ProductsController < ApplicationController
 private
 
   def get_params
-    params.require(:product).permit(:title, :description, :price,:category_id)
+    params.require(:product).permit(:title, :description, :price,:category_id, { tag_ids: [] })
   end
 
   def find_product

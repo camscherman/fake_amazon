@@ -4,7 +4,14 @@
 <div>
     <%= link_to(p.title, product_path(p)) %>
     <%= number_to_currency(p.price)%>
+    <% if user_signed_in? %>
+  <% if p.fans.include?(current_user) %>
+  <% favourite = p.favourites.find_by( user: current_user) %>
+      <%= link_to fa_icon('star'), favourite_path(favourite), method: :delete %>
+  <% else %>
+    <%= link_to fa_icon('star-o'), product_favourites_path(p), method: :post %>
+    <% end %>
+    <% end %>
 </div>
 
 <% end %>
-

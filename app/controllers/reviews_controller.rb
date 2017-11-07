@@ -3,8 +3,8 @@ class ReviewsController < ApplicationController
     before_action :find_review, only: [:destroy]
     before_action :authenticate_user
     before_action :authorize_user!, only: [:destroy]
-    
-    def create 
+
+    def create
         @review = @product.reviews.build(review_params)
         @review.user = current_user
         if @review.save
@@ -21,23 +21,35 @@ class ReviewsController < ApplicationController
 
     end
 
+    def hide
+        @review = Review.find(params[:id])
+        @product = Product.find_by_id( @review.product_id)
+        
+
+        if @review.update(is_hidden: true)
+            redirect_to product_path(@product)
+        else
+            redirect_to product_path(@product)
+        end
+    end
+
 
     private
-    def review_params 
+    def review_params
         params.require(:review).permit(:body, :rating, :product_id)
     end
     def find_product
         @product = Product.find(params[:product_id])
     end
 
-    def find_review 
+    def find_review
         @review = Review.find(params[:id])
     end
 
     def authorize_user!
-        unless can?(:manage, @review)
+        unless can?(:crud, @review)
         flash[:alert] = "Access denied"
         redirect_to root_path
         end
-    end 
+    end
 end

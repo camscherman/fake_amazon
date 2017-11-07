@@ -1,39 +1,80 @@
 <div>
-<h1> <%= @product.title %> </h1>
-<h2> <%= number_to_currency(@product.price) %></h2>
-<p> <%= @product.description %></p>
-<p>Created By: <%= @product.user&.full_name %>
+  <h1>
+    <%= @product.title %>
+  </h1>
+  <h2>
+    <%= number_to_currency(@product.price) %></h2>
+  <p>
+    <%= @product.description %></p>
+    <% @product.tags.each do |t| %>
+    <span>
+      <%= link_to t.name, tag_path(t) %>, 
+      </span>
+      <% end %>
+  <p>Created By:
+    <%= @product.user&.full_name %>
 
-</div>
-<% if (user_signed_in? && can?(:manage, @product)) %>
-    <%= link_to( 'Edit Product', edit_product_path(@product)) %>
-    <%= link_to('Delete Product', product_path(@product), method: :delete) %>
-<% end %>
+  </div>
+  <% if (user_signed_in? && can?(:manage, @product)) %>
+  <%= link_to( 'Edit Product', edit_product_path(@product)) %>
+  <%= link_to('Delete Product', product_path(@product), method: :delete) %>
+  <% end %>
 
-<%= form_for [@product,@review]  do |f| %>
-<div>
-<%= f.label :body%>
-<%= f.text_area :body %>
-</div>
-<div>
+  <%= form_for [@product,@review]  do |f| %>
+  <div>
+    <%= f.label :body%>
+    <%= f.text_area :body %>
+  </div>
+  <div>
 
-<%= f.label :rating %>
-<%= f.select :rating, (1..5).map { |num| [num,num]} %>
-</div>
-<%= f.submit %>
-<% end %>
+    <%= f.label :rating %>
+    <%= f.select :rating, (1..5).map { |num| [num,num]} %>
+  </div>
+  <%= f.submit %>
+  <% end %>
 
-<%  @product.reviews.each do |review| %>
-<hr/>
-<div>
+  <%  @product.reviews.each do |review| %>
+  <% if(can?(:manage, Product.find_by(id: review.product_id)) || !review.is_hidden?) %>
+  <hr/>
+  <div>
+    Rating:
+    <%= review.rating %>
+    Body:
+    <%= review.body %>
+    Created By:
+    <%= review.user.full_name %>
+    Hidden?:
+    <%= review.is_hidden %>
 
-    Rating: <%= review.rating %>
-    Body: <%= review.body %>
-    Created By: <%= review.user.full_name %>
-    <% if user_signed_in? &&  can?(:manage, review) %>
-    <%= link_to 'Delete', review_path(review), method: :delete, data: {confirm: "Are you sure?"} %>
-   <% end %>
-    </div>
+    <%= form_for :review, url: hide_review_path(review.id)  do |f| %>
+    <%= f.submit "Hide" %>
     <% end %>
+    <% end %>
+    <% if user_signed_in? &&  can?(:crud, review) %>
+    <%= link_to 'Delete', review_path(review), method: :post, data: {confirm: "Are you sure?"} %>
+    <% end %>
+    <% if user_signed_in? && can?(:like, review) %>
+     <% if review.get_like(current_user).present? %>
 
-    <hr/>
+      <%= link_to 'Unlike', like_path(review.get_like(current_user)), method: :delete %>
+     <% else %>
+      <%= link_to 'Like', review_likes_path(review), method: :post %>
+      <% end %>
+      <p><%= pluralize(review.likes.count, 'person') %> liked this.</p>
+    <% end %>
+      <% vote = review.votes.find_by_user_id(current_user)%>
+      <% if vote.nil?%>
+      <%= link_to 'Upvote', review_votes_path(review, {is_up: true}), method: :post %>
+      <%= link_to 'Downvote', review_votes_path(review, {is_up: false}), method: :post %>
+      <% elsif vote.is_up? %>
+      <%= link_to 'Remove Upvote', vote_path(vote), method: :delete %>
+      <%= link_to 'Downvote', vote_path(vote, {is_up: false}), method: :patch %>
+      <% else %>
+      <%= link_to 'Upvote', vote_path(vote, {is_up: true}), method: :patch %>
+      <%= link_to 'Remove Downvote', vote_path(vote, {is_up: false}), method: :delete %>
+      <% end %>
+
+  </div>
+  <% end %>
+
+  <hr/>

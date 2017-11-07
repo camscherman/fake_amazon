@@ -22,11 +22,16 @@
   <% if(current_user.present?) %>
     <span> Hello <%= current_user.first_name %> <%= current_user.last_name %><span>
     <%= link_to 'Sign Out', session_path, method: :delete %>
+    <%= link_to 'My Favourites', user_path(current_user) %>
+    <% if(current_user.is_admin?) %>
+      <%= link_to "Admin Panel", admin_panel_index_path %>
+      <% end %>
   <% else %>
       <%= link_to('Sign Up', new_user_path) %>
-      |
       <%= link_to('Sign In', new_session_path) %>
       <% end %>
+
+      | <%= link_to 'Show Tags', tags_path %>
   <hr>
   <% if(flash[:notice].present?) %>
    <div class="flash-message">
