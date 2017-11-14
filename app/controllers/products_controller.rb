@@ -23,8 +23,9 @@ class ProductsController < ApplicationController
 
     @product = Product.new(get_params)
     @product.user = current_user
- 
+
     if(@product.save)
+      ProductMailer.notify_product_owner(@product).deliver_now
        redirect_to product_path(@product)
     else
       render new_product_path

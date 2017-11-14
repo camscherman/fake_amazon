@@ -8,6 +8,7 @@ class ReviewsController < ApplicationController
         @review = @product.reviews.build(review_params)
         @review.user = current_user
         if @review.save
+            ReviewsMailer.notify_review_product_owner(@review).deliver_now
             redirect_to product_path(@product)
         else
             @reviews = @product.reviews.order(created_at: :desc)
@@ -24,7 +25,7 @@ class ReviewsController < ApplicationController
     def hide
         @review = Review.find(params[:id])
         @product = Product.find_by_id( @review.product_id)
-        
+
 
         if @review.update(is_hidden: true)
             redirect_to product_path(@product)

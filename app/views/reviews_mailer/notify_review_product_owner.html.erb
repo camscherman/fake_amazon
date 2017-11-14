@@ -1,0 +1,8 @@
+<h1>Hello <%= @product_owner.first_name %></h1>
+  <p>
+    You got a new review on: <%= @product.title %>
+    It says:
+          <%= @review.body %>
+    author: <%= @review.user.full_name %>
+    <%= link_to "Show review", product_url(@product)%>
+  </p>

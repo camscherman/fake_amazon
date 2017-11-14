@@ -20,17 +20,15 @@
   <%= link_to('Delete Product', product_path(@product), method: :delete) %>
   <% end %>
 
-  <%= form_for [@product,@review]  do |f| %>
+  <%= simple_form_for [@product,@review]  do |f| %>
   <div>
-    <%= f.label :body%>
-    <%= f.text_area :body %>
+    <%= f.input :body%>
+    
   </div>
-  <div>
-
-    <%= f.label :rating %>
-    <%= f.select :rating, (1..5).map { |num| [num,num]} %>
+  <div>    
+    <%= f.input :rating, collection: (1..5).map { |num| [num,num]} %>
   </div>
-  <%= f.submit %>
+  <%= f.submit class: 'btn btn-primary' %>
   <% end %>
 
   <%  @product.reviews.each do |review| %>

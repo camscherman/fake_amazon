@@ -1,32 +1,17 @@
 
 
-<%= form_for @product do |p| %>
-<% if @product.errors.present? %>
-    <p>
-    <%= @product.errors.full_messages.join(', ') %>
-    </p>
-    <% end %>
+<%= simple_form_for @product do |p| %>
 
-<div>
-    <%= p.label :title%>
-    <%= p.text_field :title %>
-</div>
-<div>
-    <%= p.label :description%>
-    <%= p.text_area :description %>
-</div>
-<div>
-    <%= p.label :price%>
-    <%= p.text_field :price %>
-</div>
-<div>
-    <%= p.label :tag_ids %>
-    <%= p.collection_check_boxes :tag_ids, Tag.order(:name), :id, :name %>
-</div>
-<div>
-    <%# <%= p.select_tag(:category) %> 
-    <%= p.select :category_id , @categories.map { |category| [category.name, category.id] } %>
-    </div>
 
-<%= p.submit %>
+
+   
+   <%= p.input :title, label: 'Product Title' %>
+   <%= p.input :description %>
+   <%= p.input :price %>
+   <%= p.association :tags, input_html: { class: 'chosen-select' } %>
+    <%= p.association :category , as: :select %>
+    
+   <%= p.submit class: 'btn btn-primary' %>
+
+
 <% end %>

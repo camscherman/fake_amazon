@@ -1,0 +1,8 @@
+<h1> Hello <%= @product_owner.first_name %>,</h1>
+<p>
+    You made a new product: <%= @product.title %>
+    With body: <%= @product.description%>
+    Price: <%= @product.price %>
+    Sale Price: <%= @product.sale_price %>
+    <%= link_to "View your product", product_url(@product) %>
+ </p>

@@ -1,15 +1,15 @@
-<%= form_for :session, url: session_path do |f| %>
+<%= simple_form_for :session, url: session_path do |f| %>
 
 
    
     <div>
-     <%= f.label :email %>
-     <%= f.email_field :email%>
+     <%= f.input :email %>
+    
     </div>
     <div>
-     <%= f.label :password %>
-     <%= f.password_field :password %>
+     <%= f.input :password %>
+ 
     </div>
    
-    <%= f.submit 'Sign In' %>
+    <%= f.submit 'Sign In', class: 'btn btn-primary' %>
     <% end %>

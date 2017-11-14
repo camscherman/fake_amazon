@@ -1,4 +1,7 @@
 class Product < ApplicationRecord
+    extend FriendlyId
+    friendly_id :title, use: [:slugged, :history, :finders]
+    
     has_many :reviews , dependent: :destroy
     belongs_to :category
     belongs_to :user
@@ -9,6 +12,7 @@ class Product < ApplicationRecord
 
     has_many :fans, through: :favourites, source: :user
 
+    
     validates(:title,{
         presence:true,
         uniqueness: {case_sensitive: false}

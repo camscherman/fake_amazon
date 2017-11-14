@@ -12,7 +12,7 @@
 /tmp/*
 !/log/.keep
 !/tmp/.keep
-
+/config/initializers/email_vars.rb
 /node_modules
 /yarn-error.log
 

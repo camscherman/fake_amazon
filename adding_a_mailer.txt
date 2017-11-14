@@ -1,0 +1,29 @@
+rails g mailer answers_mailer
+
+create file:
+config->initializers-> create a file (setup_mail.rb)
+
+
+in answers_mailer:
+
+ActionMailer::Base.smtp_settings = {
+  address: 'smtp.gmail.com',
+  port: '587',
+  enable_starttls_auto: true,
+  authentication: :plain,
+  user_name: ENV['EMAIL_USER_NAME'],
+  password: ENV['EMAIL_PASSWORD']
+}
+
+Add a file to initializers called eg: app_keys.rb...
+
+You can add ENV['EMAIL_USER_NAME']= "something",
+            ENV['EMAIL_PASSWORD']= "something"
+
+call command:
+
+AnswersMailer.new_answer(@answer).deliver_now
+
+in config->environments-> development:
+config.action_mailer.delivery_method = :letter_opener
+config.action_mailer.default_url_options = { host: "localhost:3000" }
